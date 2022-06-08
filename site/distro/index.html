@@ -1,0 +1,1014 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Михаил Краснов <linuxoid85@gmail.com>">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.16">
+    
+    
+      
+        <title>Строение типичного дистрибутива GNU/Linux. Процесс загрузки - Строение GNU/Linux. Перезагрузка</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1c3799f8.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cc9b2e1e.min.css">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i%7CDroid+Sans+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Open Sans";--md-code-font:"Droid Sans Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gnulinux" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href=".." title="Строение GNU/Linux. Перезагрузка" class="md-header__button md-logo" aria-label="Строение GNU/Linux. Перезагрузка" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Строение GNU/Linux. Перезагрузка
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Строение типичного дистрибутива GNU/Linux. Процесс загрузки
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Переключиться в тёмный режим"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Переключиться в тёмный режим" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Переключиться в светлый режим"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Переключиться в светлый режим" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" aria-label="Поделиться" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Очистить" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Строение GNU/Linux. Перезагрузка" class="md-nav__button md-logo" aria-label="Строение GNU/Linux. Перезагрузка" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Строение GNU/Linux. Перезагрузка
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Строение GNU/Linux. Перезагрузка
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../before_start/" class="md-nav__link">
+        Предисловие
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../distros/" class="md-nav__link">
+        Краткий обзор дистрибутивов GNU/Linux
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shells/" class="md-nav__link">
+        Краткий обзор окружений пользователя
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Строение типичного дистрибутива GNU/Linux. Процесс загрузки
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Строение типичного дистрибутива GNU/Linux. Процесс загрузки
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание раздела">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание раздела
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    Базовые знания
+  </a>
+  
+    <nav class="md-nav" aria-label="Базовые знания">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux" class="md-nav__link">
+    Ядро Linux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    Модули монолитных ядер как решение проблем пересборки
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux_1" class="md-nav__link">
+    Основные подсистемы ядра Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    Что тебе в имени моём?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freelibre-software-freeware-software-" class="md-nav__link">
+    Различия Free/Libre Software - свободного ПО, от Freeware Software -
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    бесплатного ПО
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freelibre-software-open-source-software" class="md-nav__link">
+    Различия Free/Libre Software от Open Source Software
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gnulinux_1" class="md-nav__link">
+    Основные части дистрибутива GNU/Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fhs" class="md-nav__link">
+    Структура директорий согласно FHS
+  </a>
+  
+    <nav class="md-nav" aria-label="Структура директорий согласно FHS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fhs_1" class="md-nav__link">
+    Независимые классификации в FHS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание раздела">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание раздела
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    Базовые знания
+  </a>
+  
+    <nav class="md-nav" aria-label="Базовые знания">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux" class="md-nav__link">
+    Ядро Linux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    Модули монолитных ядер как решение проблем пересборки
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux_1" class="md-nav__link">
+    Основные подсистемы ядра Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    Что тебе в имени моём?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freelibre-software-freeware-software-" class="md-nav__link">
+    Различия Free/Libre Software - свободного ПО, от Freeware Software -
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    бесплатного ПО
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freelibre-software-open-source-software" class="md-nav__link">
+    Различия Free/Libre Software от Open Source Software
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gnulinux_1" class="md-nav__link">
+    Основные части дистрибутива GNU/Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fhs" class="md-nav__link">
+    Структура директорий согласно FHS
+  </a>
+  
+    <nav class="md-nav" aria-label="Структура директорий согласно FHS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fhs_1" class="md-nav__link">
+    Независимые классификации в FHS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="gnulinux">Строение типичного дистрибутива GNU/Linux. Процесс загрузки.<a class="headerlink" href="#gnulinux" title="Permanent link">⚓︎</a></h1>
+<p>Данное руководство не является самоучителем вроде "Мой первый компьютер",
+поэтому сведения о загрузке именно ПК здесь будут пропущены.</p>
+<h2 id="_1">Базовые знания<a class="headerlink" href="#_1" title="Permanent link">⚓︎</a></h2>
+<h3 id="linux">Ядро Linux<a class="headerlink" href="#linux" title="Permanent link">⚓︎</a></h3>
+<p>Linux - это ядро операционной системы (GNU/Linux), обеспечивающее программному
+обеспечению доступ к ресурсам компьютера и предоставляющее наиболее низкий
+уровень абстракции для доступа приложений к ресурсам системы, необходимым для их
+работы. Как писал Таненбаум:</p>
+<blockquote>
+<p>Абстракция - это ключ к управлению сложностью.</p>
+</blockquote>
+<p>Linux является <em>монолитным</em> ядром. Это классическая и наиболее распространённая
+архитектура ядер ОС. Все части монолитных ядер работают в одном адресном
+пространстве.</p>
+<p><strong>Плюсы монолитных ядер:</strong></p>
+<ul>
+<li>Более прямой доступ к аппаратным средствам;</li>
+<li>Проще обмен данными между процессами;</li>
+<li>Процессы реагируют быстрее;</li>
+</ul>
+<p><strong>Минусы монолитного ядра:</strong></p>
+<ul>
+<li>Большой размер;</li>
+<li>Более высокие требования к аппаратуре ПК, в частности, к ОЗУ;</li>
+<li>Менее безопасно.</li>
+</ul>
+<p>Кроме того, монолитность усложняет отладку ядра, изменение функционала
+(например, добавление новых функций, удаление легаси-кода, унаследованного от
+старых версий ядра, etc.). Не следует забывать и про системные требования такого
+типа ядер. Поэтому использование ОС с такими ядрами неоправдано в системах,
+ограниченных, например, по объёму ОЗУ.</p>
+<h2 id="_2">Модули монолитных ядер как решение проблем пересборки<a class="headerlink" href="#_2" title="Permanent link">⚓︎</a></h2>
+<p>Раньше при любом изменении в аппаратуре ПК требовалось выполнить перекомпиляцию
+монолитного ядра. Сейчас же Linux (может быть, и некоторые другие <em>монолитные</em>
+ядра тоже) умеет динамически во время работы подгружать и выгружать <em>модули</em>,
+выполняющий какие-либо из функций ядра. Пользователь может подключать
+виртуализацию, какие-то другие из функций и прочее.</p>
+<h2 id="linux_1">Основные подсистемы ядра Linux<a class="headerlink" href="#linux_1" title="Permanent link">⚓︎</a></h2>
+<ol>
+<li><strong>Process Scheduled</strong> (SCHED) - планировщик процессов, отвечающий за контроль
+   над доступом процессов к CPU. Планировщик обеспечивает такое поведение ядра,
+   при котором все процессы имеют справедливый доступ к ЦП компьютера.</li>
+<li><strong>Memory Manager</strong> (MM) - менеджер памяти, обеспечивающий различным процессам
+   безопасный доступ к основной памяти системы. Кроме того, MM обеспечивает
+   работу виртуальной памяти, которая позволяет процессам использовать больше
+   памяти, чем реально доступно в системе. Отдельные фрагменты памяти, как
+   правило, неактивные, перемещаются из ОЗУ в другое хранилище, например,
+   жёсткий диск (в раздел или файл подкачки), освобождая ОЗУ для загрузки других
+   активных фрагментов памяти. Это называется <em>подкачкой страниц</em> или
+   <em>swapping</em>.</li>
+<li><strong>Virtual File System</strong> (VFS) - виртуальная файловая система, создающая
+   абстрактный слой, скрывающий детали оборудования, предоставляя общий файловый
+   интерфейс для всех устройств. Кроме того, VFS поддерживает несколько форматов
+   файловых систем, совместимых с другими ОС.</li>
+<li><strong>Network Interface</strong> (NET) - сетевые интерфейсы. Обеспечивает работу с
+   различными сетевыми стандартами и сетевым оборудованием.</li>
+<li><strong>Inter-Process Communication</strong> (IPC) - межпроцессорная система,
+   поддерживающая несколько механизмов для <code>process-to-process</code> связей в единой
+   Linux-системе.</li>
+</ol>
+<p align="center"><img src="pic/kernel2.png">Структура ядра Linux и основных
+подсистем</p>
+
+<h2 id="_3">Что тебе в имени моём?<a class="headerlink" href="#_3" title="Permanent link">⚓︎</a></h2>
+<p align="right">Даже если проект GNU заслуживает благодарности за эту работу, разве стоит
+спорить, когда люди не отдают должного? Разве важно не то, что работа выполнена,
+а то, кто её проделал? Вы должны отдыхать, гордиться хорошо выполненной работой
+и не беспокоиться о благодарностях.</p>
+
+<p>Как вишню не назови, вишней она быть не перестанет. Но если вы назовёте вишню
+яблоней, то многие (адекватные) люди разочаруются, попытавшись найти там яблоки.
+Также и у нас: Linux - это название <em>ядра</em>, а GNU/Linux - <em>операционной
+системы</em>. Такая ОС включает в себя компоненты GNU (например, coreutils, grub,
+make, gcc, gdb, awk и прочие), а также ядро Linux.</p>
+<p>Кроме GNU/Linux существует
+ещё и GNU/Hurd и, может быть, что-то ещё. Вы же используете тот, или иной
+дистрибутив GNU/Linux. Под словом "<em>дистрибутив</em>" подразумевается <em>форма
+распространения программного обеспечения</em>.</p>
+<h2 id="freelibre-software-freeware-software-">Различия Free/Libre Software - свободного ПО, от Freeware Software -<a class="headerlink" href="#freelibre-software-freeware-software-" title="Permanent link">⚓︎</a></h2>
+<h2 id="_4">бесплатного ПО<a class="headerlink" href="#_4" title="Permanent link">⚓︎</a></h2>
+<p>Очень многие убунтоиды считают, что <em>свободное</em> = <em>бесплатное</em>, но на самом деле
+это не так. Бесплатное ПО - это только бесплатное ПО, но не более. Может ли оно
+вам гарантировать все 4 свободы (о которых далее) во всех случаях? Очень
+навряд-ли.</p>
+<p>СПО призвано обеспечить 4 свободы <em>пользователю:</em></p>
+<ul>
+<li>Свобода использовать программное обеспечение безпрепятственно в своих целях;</li>
+<li>Свобода распространять копии программного обеспечения;</li>
+<li>Свобода изучать исходные тексты программного обеспечения и делать модификации
+  этого ПО;</li>
+<li>Распространять модифицированные версии программного обеспечения.</li>
+</ul>
+<h2 id="freelibre-software-open-source-software">Различия Free/Libre Software от Open Source Software<a class="headerlink" href="#freelibre-software-open-source-software" title="Permanent link">⚓︎</a></h2>
+<p>Открытое ПО (Open SOurce Software) также не гарантирует всех свобод по
+определению. Несмотря на то, что исходный код находится в свободном доступе,
+может ли это гарантировать то, что вы можете делать с ним то, что считаете
+нужным? Может ли это означать то, что вам доступны все 4 свободы? Конечно же
+нет. Перед тем, как выполнять какие-либо действия с таким ПО, требуется
+прочитать текст лицензии, под которой оно распространяется. И если лицензия
+является <em>свободной</em>, то такое "открытое" ПО тоже свободно.</p>
+<blockquote>
+<p>Понятие бесплатности и открытости могут входить как в понятие свободного ПО, так
+и использоваться отдельно.</p>
+</blockquote>
+<h2 id="gnulinux_1">Основные части дистрибутива GNU/Linux<a class="headerlink" href="#gnulinux_1" title="Permanent link">⚓︎</a></h2>
+<ol>
+<li>Собственно, само ядро Linux, создающее абстрактный слой и являющееся
+   "посредником" между ПО и hardware-частью компьютера;</li>
+<li><strong>Hardware Controllers</strong> (контроллеры оборудования) - подсистема,
+   охватывающая всевозможные физические устройства, такие, как CPU, RAM, жёсткие
+   и гибкие диски, сетевые карты...</li>
+<li><strong>OS Services</strong> (службы операционной системы) - службы, которые обычно
+   являются частью ОС.</li>
+<li><strong>User Applications</strong> (пользовательские приложения) - набор пользовательского
+   ПО. Такой набор разнится от дистрибутива к дистрибутиву GNU/Linux.</li>
+</ol>
+<div align="center"><img src="pic/kernel_structure.jpg"><p>Структура типичного
+дистрибутива GNU/Linux</p></div>
+
+<p>Каждая подсистема может взаимодействовать только с двумя соседними,
+расположенными непосредственно "выше" и "ниже" её уровня. Кроме того,
+зависимости между этими подсистемами направлены сверху вниз: слои, расположенные
+выше, зависят от частей ниже, но части, расположенные ниже, не зависят от
+частей выше них.</p>
+<h2 id="fhs">Структура директорий согласно FHS<a class="headerlink" href="#fhs" title="Permanent link">⚓︎</a></h2>
+<p>В данном разделе речь пойдёт про иерархию ФС UNIX систем, соблюдающих стандарт
+FHS (Filesystem Hierarchy Standard). Например, GNU/Linux. Всякие Gobo GNU/Linux
+здесь не рассматриваются.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>/   корень
+<span class="linenos" data-linenos=" 2 "></span>|--- /bin   основные утилиты, необходимые как в однопользовательском режиме, так
+<span class="linenos" data-linenos=" 3 "></span>            и при обычной работе
+<span class="linenos" data-linenos=" 4 "></span>|--- /boot  загрузочные файлы (собственно, файлы загрузчика, ядро, et cetera)
+<span class="linenos" data-linenos=" 5 "></span>|--- /dev   файлы устройств (например, /dev/sda, /dev/sdb, et cereta)
+<span class="linenos" data-linenos=" 6 "></span>|--- /etc   конфигурационные файлы системы
+<span class="linenos" data-linenos=" 7 "></span>|    |--- /etc/opt  конфиги для /opt/*
+<span class="linenos" data-linenos=" 8 "></span>|    |--- /etc/X11  конфиги X Window
+<span class="linenos" data-linenos=" 9 "></span>|    |--- ...
+<span class="linenos" data-linenos="10 "></span>|--- /home  содержит домашние каталоги пользователей, где юзеры хранят свои
+<span class="linenos" data-linenos="11 "></span>            файлы, настройки системы, специфичные для каждого пользователя
+<span class="linenos" data-linenos="12 "></span>            и т.п.
+<span class="linenos" data-linenos="13 "></span>|--- /lib   основные библиотеки, необходимые для работы ПО из /bin и /sbin
+<span class="linenos" data-linenos="14 "></span>|--- /media точки монтирования сменных носителей
+<span class="linenos" data-linenos="15 "></span>|--- /mnt   временно монтируемые ФС
+<span class="linenos" data-linenos="16 "></span>|--- /opt   дополнительное ПО. Например, именно туда устанавливается легендарное
+<span class="linenos" data-linenos="17 "></span>            рабочее окружение TDE.
+<span class="linenos" data-linenos="18 "></span>|--- /proc  виртуальная ФС, предоставляющая информацию о состоянии ядра ОС и
+<span class="linenos" data-linenos="19 "></span>            запущенных процессах в виде файлов
+<span class="linenos" data-linenos="20 "></span>|--- /root  домашний каталог пользователя root
+<span class="linenos" data-linenos="21 "></span>|--- /sbin  основные системные программы для настройки и администрирования
+<span class="linenos" data-linenos="22 "></span>            системы (init, ifconfig, mkfs, et cereta)
+<span class="linenos" data-linenos="23 "></span>|--- /srv   данные для сервисов, предоставляемых системой
+<span class="linenos" data-linenos="24 "></span>|--- /sys   содержит информацию об устройствах, драйверах и пр.
+<span class="linenos" data-linenos="25 "></span>|--- /tmp   временные файлы, некоторые из них удаляются перед выключением
+<span class="linenos" data-linenos="26 "></span>            системы
+<span class="linenos" data-linenos="27 "></span>|--- /usr   вторичная иерархия для данных пользователя. Содержит большинство
+<span class="linenos" data-linenos="28 "></span>            пользовательских приложений и утилит, используемых в
+<span class="linenos" data-linenos="29 "></span>            многопользовательском режиме
+<span class="linenos" data-linenos="30 "></span>|    |--- /usr/bin  дополнительное ПО для всех пользователей
+<span class="linenos" data-linenos="31 "></span>|    |--- /usr/include  стандартные заголовочные файлы
+<span class="linenos" data-linenos="32 "></span>|    |--- /usr/lib  библиотеки для программ из /usr/bin и /usr/sbin
+<span class="linenos" data-linenos="33 "></span>|    |--- /usr/local    третичная иерархия для данных, специфичных для данного
+<span class="linenos" data-linenos="34 "></span>                        хоста, содержит директории bin, lib, share, et cetera
+<span class="linenos" data-linenos="35 "></span>|    |--- /usr/share    архитектурно-независимые файлы
+<span class="linenos" data-linenos="36 "></span>|    |--- /usr/sbin дополнительные системные программы (см. также: /sbin)
+<span class="linenos" data-linenos="37 "></span>|    |--- /usr/src  исходные тексты ПО
+<span class="linenos" data-linenos="38 "></span>|--- /var   изменяемые файлы, такие как кеш приложений и ПМ, логи и прочее
+<span class="linenos" data-linenos="39 "></span>|    |--- /var/log  логи ядра, операционной системы и ПО
+</code></pre></div>
+<h3 id="fhs_1">Независимые классификации в FHS<a class="headerlink" href="#fhs_1" title="Permanent link">⚓︎</a></h3>
+<p>Спецификация FHS основывается на идее существования двух независимых
+классификаций файлов: разделяемых и неразделяемых, а так же изменяемые и
+статичные. Разделяемые данные могут распространяться на несколько хостов;
+неразделяемые специфичны для конкретного хоста (например, конфиги).
+Соответственно, изменяемые файлы изменяются, а статичные - нет (за исключением
+установки и обслуживания системы).</p>
+<p>Резюме. 4 возможные комбинации + нужные директории.</p>
+<table>
+<thead>
+<tr>
+<th align="left">--</th>
+<th align="center">Разделяемые</th>
+<th align="center">Неразделяемые</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">статичные</td>
+<td align="center"><code>/usr</code>, <code>/opt</code></td>
+<td align="center"><code>/etc</code>, <code>/boot</code></td>
+</tr>
+<tr>
+<td align="left">изменяемые</td>
+<td align="center"><code>/var/main</code></td>
+<td align="center"><code>/var/run</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="_5">Процесс загрузки<a class="headerlink" href="#_5" title="Permanent link">⚓︎</a></h1>
+<h2 id="linux_2">Загрузчик и ядро Linux<a class="headerlink" href="#linux_2" title="Permanent link">⚓︎</a></h2>
+<p>В данном разделе будут пропущены загрузка ПК, BIOS, UEFI и прочее, что не
+относится к GNU/Linux напрямую. А начну с загрузчика, коих для GNU/Linux, как и
+других UNIX-систем, довольно много. Но самый распространённый - это GRUB2.</p>
+<p>Задача загрузчика - инициализировать ядро операционной системы (в нашем случае
+ядро - Linux). В помощь ядру загрузчик может использовать <em>начальный образ
+загрузки</em> - <code>initrd</code> или <code>initramfs</code> (initial ram disk или initial ram
+filesystem) - представляющий собой архив с образом файловой системы,
+разворачивающейся в ОЗУ в начале загрузки. В initrd/initramfs находятся нужные
+драйверы, скрипты и прочее, что необходимо для инициализации оборудования и
+прочих целей.</p>
+<p>После начального образа загрузки загружается ядро. Оно <em>обычно</em> находится в
+<code>/boot</code>, в своём названии имеет <code>vmlinuz</code>:</p>
+<ul>
+<li><code>vm</code> - поддержка виртуальной памяти;</li>
+<li><code>linu</code> - Linux;</li>
+<li><code>z</code> - указатель того, что файл сжат (формат сжатия обычно <code>zlib</code>, но иногда
+  можно встретить <code>bz2</code>, <code>lzma</code> и некоторые другие).</li>
+</ul>
+<h2 id="_6">Системы инициализации<a class="headerlink" href="#_6" title="Permanent link">⚓︎</a></h2>
+<p>После ядра стартует <em>система инициализации</em> в UNIX, которая запускает все
+остальные процессы. Имеет PID (Process ID) = 1. Примерно до 2010 года де-факто
+стандартом системы инициализации в GNU/Linux был SysVInit. Но после него были
+попытки заменить SysVInit на другую СИ. Например, в Ubuntu первое время
+использовался upstart, а в Gentoo GNU/Linux использовался и используется сейчас
+OpenRC. В недрах компании Red Hat была создана система инициализации systemd,
+которая в данный момент используется в подавляющем числе дистрибутивов
+GNU/Linux.</p>
+<p>Кроме того, в дистрибутиве Slackware использовался раньше и используется сейчас
+сборочные скрипты в стиле BSD. Не даров Slackware называют "самым юниксовым".</p>
+<blockquote>
+<p>Если ты изучаешь Red Hat, то ты изучишь только Red Hat. А если ты изучаешь
+Slackware, то ты изучишь GNU/Linux.</p>
+</blockquote>
+<p>Есть ещё Runit, Finit и другие СИ. У каждой свои достоинства и недостатки, но
+самым популярным инитом стал systemd. Это связано с тем, что некоторые детали в
+нём реализованы намного удобнее, чем в других системах, да и systemd был
+разработан сотрудниками Red Hat, поэтому его широкое распространение вполне
+предсказуемо.</p>
+<p>Исполняемый двоичный файл системы инициализации находится в <code>/sbin/init</code>,
+поэтому ядро ищет его именно там. Но ядру вы можете указать опцию
+<code>init=/путь/до/инита</code>, чтобы загружать другую систему инициализации или какую-то
+программу. Например, <code>init=/bin/bash</code>- опция ядра, которая довольно часто
+встречается в разных статьях о восстановлении дистрибутива GNU/Linux после
+поломки.</p>
+<p><strong>Достоинства systemd:</strong></p>
+<ul>
+<li>Параллельный запуск служб и прочие вещи, позволяющие существенно ускорить
+  запуск ОС.</li>
+<li>Запуск сервисов по расписанию (аналог <code>cron</code>).</li>
+<li>Смена корня (аналог <code>chroot</code>).</li>
+<li>Простой и лаконичный синтаксис служб.</li>
+<li>Удобный контроль этих служб.</li>
+<li>Анализ времени загрузки системы.</li>
+</ul>
+<p><strong>Недостатки systemd:</strong></p>
+<ul>
+<li>Не Unix Way. systemd - монолитная и сложная система, заменяющая собой не
+  только систему инициализации, но и кучу других утилит. Некоторые из пунктов,
+  перечисленных в "достоинствах", можно отнести и к пункту "Недостаки". Кроме
+  того, есть личности, которые сетуют на плохое качество кода. Но code review
+  этого инита я не проводил, поэтому качество оценить, увы, не могу.</li>
+<li>systemd плохо работает на split-usr (CDS в терминологии Calmira GNU/Linux)
+  конфигурации, о чём честно предупреждает во время сборки из исходного кода.
+  Кроме того, поддержку split-usr конфигурации из systemd скоро уберут вообще.</li>
+<li>Этой системе инициализации в некоторых случаях может требоваться несколько
+  больше ресурсов, чем другим СИ, из-за чего разработчики многих легковесных
+  дистрибутивов GNU/Linux не советуют его использовать на слабом железе ПК и
+  заменяют systemd на его менее прожорливых товарищей. Например, на SysVInit.</li>
+</ul>
+<p>Раз уж начал речь про SysVInit, то, думаю, требуется написать и пару слов про
+него.</p>
+<p><strong>Достоинства SysVInit:</strong></p>
+<ul>
+<li>Устоявшаяся и хорошо понятная система.</li>
+<li>Простая и понятная настройка.</li>
+<li>Стабильная и надёжная работа.</li>
+<li>Небольшой вес и простое строение.</li>
+</ul>
+<p><strong>Недостатки SysVInit:</strong></p>
+<ul>
+<li>Неудобная (а для некоторых ещё и сложная) работа с сервисами, особенно -
+  отсутствие зависимостей сервисов.</li>
+<li>Последовательная обработка задач загрузки (т.е. когда каждый сервис
+  запускается последовательно друг за другом, а не параллельно, как в systemd),
+  что в некоторых случаях можеь замедлить скорость старта/выключения ОС.</li>
+</ul>
+<h2 id="_7">Последние действия<a class="headerlink" href="#_7" title="Permanent link">⚓︎</a></h2>
+<p>Как было написано выше, задача системы инициализации - запустить все необходимые
+процессы ОС и подготовить её к работе. И здесь я опишу сценарий загрузки
+системы без GUI, т.е. не загружается никаких DM, DE и прочего, а стартует
+командная оболочка. После этого будет описан второй сценарий, когда в системе
+установлен графический пользовательский интерфейс.</p>
+<p><strong>Система без GUI</strong></p>
+<p>В последнюю очередь выводится содержимое
+текстового файла <code>/etc/issue</code>, в котором содержится приветственный
+текст (в том случае, если файл пустой, то ничего и не будет
+выведено), а после - загружается программа
+<code>/bin/login</code>, которая запрашивает у человека имя пользователя и его пароль. В
+том случае, если человек неправильно ввёл имя пользователя или его пароль,
+программа запрашивает эти данные снова. Либо если пользователь не вводил их на
+протяжении какого-то времени. Если введённые данные оказались правильными, то
+запускается командная оболочка, установленная по умолчанию для пользователя, от
+имени которого произведён вход в систему. Например, оболочка <code>/bin/bash</code> или
+<code>/bin/tcsh</code>.</p>
+<p>Вообще, командных оболочек очень много, самые основные:</p>
+<ul>
+<li>Bourne shell (<code>sh</code>) - "тот самый".</li>
+<li>Bourne again shell (<code>bash</code>) - усовершенствованная оболочка <code>sh</code>, ставшая
+  классической в GNU/Linux. Во многих современных дистрибутивах GNU/Linux
+  <code>/bin/sh</code> является ссылкой на <code>/bin/bash</code>.</li>
+<li>BusyBox - представляет собой целое пользовательское окружение, в том числе,
+  командную оболочку (вызов: <code>busybox sh</code>). Достоинство: небольшой размер и
+  "несерьёзные" требования к аппаратуре ПК. Используется во всевозможных
+  минималистичных дистрибутивах GNU/Linux, таких, как Alpine, Floppinux и
+  прочих.</li>
+</ul>
+<p><strong>Система с GUI</strong></p>
+<p>Здесь всё довольно размыто, ибо у GUI в GNU/Linux, как и вообще в UNIX-системах,
+всё не так, как, предположим, у какой-то Windows. GUI здесь всё такой же
+модульный, что имеет свои достоинства. Вообще, о графике в UNIX'ах можно
+говорить бесконечно, ибо тема достаточно объёмная, но я постараюсь описать всё
+вкратце.</p>
+<p>GUI состоит из следующих компонентов:</p>
+<ul>
+<li>Display Server - дисплейный сервер.</li>
+<li>Display Manager (DM) - дисплейный менеджер.</li>
+<li>Desktop Environment (DE) - рабочее окружение.</li>
+</ul>
+<p>Хочу заметить, что дисплейный менеджер может отсутствовать вообще, и тогда все
+заботы пользователя по входу в систему и выборе нужной сессии перекладываются на
+пользователя. В таком случае мы сможем лицезреть содержимое текстового файла
+<code>/etc/issue</code> и приглашение к вводу имени и пароля программы <code>login</code>, а после -
+приглашение к вводу командной оболочке. После же пользователь сам должен
+запустить рабочее окужение или что-то другое, что ему нужно.</p>
+<p>Кстати говоря, рабочее окружение так же необязательно. Многие пользователи
+предпочитают не использовать уже "готовые" DE, считая их раздутыми и
+тяжеловесными. Они отдают предпочтение "голым" оконны менеджерам (WM), которые могут
+быть как компонентами DE (о компонентах DE далее), так и использоваться
+отдельно.</p>
+<p>Примером "отдельных" "независимых" оконных менеджеров являются i3, IceWM,
+WindowMaker, OpenBox. Но никто не запрещает использовать их и в составе
+каких-либо DE, например, OpenBox используется в составе LXDE.</p>
+<p>Примером WM, котоыре обычно используются в составе DE (но в большинстве случаев
+могут использоваться и без них) являются Mutter (GNOME), KWin (KDE), Xfwm
+(Xfce).</p>
+<h1 id="de">Компоненты DE<a class="headerlink" href="#de" title="Permanent link">⚓︎</a></h1>
+<p>Рабочее окружение (DE) может состоять из следующих компонентов:</p>
+<ul>
+<li>Window Manager (WM) - оконный менеджер, т.е. программа, управляющая
+  отображением и поведением окон в GUI. Многие WM умеют также работать с
+  рабочими местами. В кажом рабочем месте пользователь располагает определённый
+  набор окон.</li>
+<li>Средство запуска ПО (меню). В некоторых оконных менеджерах это средство уже
+  втроено.</li>
+<li>Панель, на которой могут располагаться следующие элементы (апплеты/виджеты):<ul>
+<li>ср-во заруска ПО;</li>
+<li>апплет переключения между открытыми окнами;</li>
+<li>апплет системного трея;</li>
+<li>другие элементы по усмотрению пользователя.</li>
+</ul>
+</li>
+<li>Файловый менеджер, задача которого - не только работа с файлами, но и
+  управление иконками на рабочем столе.</li>
+<li>Менеджер обоев рабочего стола (может быть встроен в некоторые WM).</li>
+<li>Какие-либо приложения по умолчанию (эмулятор терминала, программа для
+  настройки системы и рабочего окружения, программа чтения электронных книг,
+  текстовый редактор, калькулятор, etc.).</li>
+<li>etc.</li>
+</ul>
+<p>Оконный менеджер, панель и некоторые другие компоненты могут быть использованы и
+без рабочего окружения. Либо они могут не использоваться в рабочем окружении.
+Некоторые DE позволяют выполнять замену некоторых своих компонентов на
+сторонние. Например, MATE и Trinity поддерживают замену терминала, файлового
+менеджера и некоторого другого ПО на стороннее.</p>
+<p>Повторюсь, все приведённые выше данные довольно размыты. Например, файловый
+менеджер, входящий в состав DE, может быть лишён функции управления рабочим
+столом. Например, в KDE 4 и 5 функцию рабочего стола выполняет специальный
+<em>виджет</em> (<em>плазмоид</em> в терминологии KDE), а в GNOME вообще убрали рабочий стол
+как анахранизм.</p>
+<p>Кроме того, оконный менеджер, панель и какие-то её доп. компоненты могут быть
+объединены в одну монолитную систему. Как, например, сделано в GNOME: GNOME
+Shell является оболочкой, объединившей в себя такие сущности, как GNOME Panel,
+Mutter и Naulilus (панель GNOME, оконный менеджер Mutter и файловый менеджер
+Nautilus соотв.).</p>
+<h1 id="_8">Описание компонентов графики<a class="headerlink" href="#_8" title="Permanent link">⚓︎</a></h1>
+<h2 id="display-server">Display server<a class="headerlink" href="#display-server" title="Permanent link">⚓︎</a></h2>
+<p>Дисплейный сервер - программа, отвечающая за координацию ввода и вывода своих
+клиентов с ОС, а так же между оборудованием и ОС. Именно благодаря Display
+Server вы используете Linux в графическом режиме, а не в TTY. Когда говорят
+"дисплейный сервер", нередко имеют ввиду <code>Xorg</code>, <code>Wayland</code>, <code>Mir</code> и прочие.
+Сейчас самый популярный - Xorg, но он очень устарел, и его пытаются заменить на
+другие инструменты. Например, на более совершенный и современный Wayland. А
+дисплейный сервер Mir, который разрабатывается CanoniCAL, предназначен для
+интернета вещей IoT. Хотя раньше предназначался для Ubuntu Desktop и Ubuntu
+Touch.</p>
+<h2 id="display-manager">Display Manager<a class="headerlink" href="#display-manager" title="Permanent link">⚓︎</a></h2>
+<p>Первая программа, которая запускается при старте графики. Его основные задачи:
+- запросить аутентификационные данные нужного пользователя (имя, пароль или
+  отпечаток пальца).
+- выбрать, какую среду рабочего стола запустить; в случае, если их несколько, то
+  спросить у пользователя, какую запустить.</p>
+<h2 id="window-manager">Window Manager<a class="headerlink" href="#window-manager" title="Permanent link">⚓︎</a></h2>
+<p>Я не случайно в предыдущем пункте начал именно с WM. Во-первых, про DE было сказано выше, а
+во-вторых, оконный менеджер можно использовать отдельно от рабочего окружения.
+Что такое <code>WM</code> было так же сказано выше. Можно выделить три вида оконных
+менеджеров:</p>
+<ul>
+<li><code>Стековые</code> (<code>плавающие</code>) следуют классической метафоре, которая на данный
+  момент самая удобная и популярная. Классическое расположение окон, которые
+  могут накладываться и перекрывать друг друга.</li>
+<li><code>Фреймовые</code> WM располагают окна в виде <code>фреймов</code> (<code>плиток</code>), эти фреймы не
+  способны перекрывать друг друга, подобное поведение встречается в графическом
+  интерфейсе <em>Windows</em> 1.x. Наиболее удобно использовать такие оконные менеджеры
+  посредством клавиатуры, хотя поддержка мыши во многих из них так же
+  присутствует.</li>
+<li><code>Динамические</code> (например, i3wm) - динамически переключаются между двумя
+  режимами, описанными выше (<code>стековый</code> и <code>фреймовый</code> режимы).</li>
+</ul>
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            К началу
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул">
+      
+        
+        <a href="../shells/" class="md-footer__link md-footer__link--prev" aria-label="Назад: Краткий обзор окружений пользователя" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              Краткий обзор окружений пользователя
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.tabs.link", "navigation.expand", "navigation.indexes", "search.highlight", "search.share", "search.suggest", "navigation.top"], "search": "../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "\u041f\u043e\u0438\u0441\u043a", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version.title": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.3a4b43e5.min.js"></script>
+      
+    
+  </body>
+</html>

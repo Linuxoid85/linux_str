@@ -1,0 +1,74 @@
+site_name: Строение GNU/Linux. Перезагрузка
+site_author: Михаил Краснов <linuxoid85@gmail.com>
+
+theme:
+  name: material
+  language: ru
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.expand
+    - navigation.indexes
+    - search.highlight
+    - search.share
+    - search.suggest
+    - navigation.top
+  palette:
+    - scheme: default
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/eye-outline
+        name: Переключиться в тёмный режим
+    - scheme: slate
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/eye
+        name: Переключиться в светлый режим
+  font:
+    text: 'Open Sans'
+    code: 'Droid Sans Mono'
+
+markdown_extensions:
+  - admonition
+  - abbr
+  - def_list
+  - md_in_html
+  - codehilite
+  - meta
+  - attr_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: ⚓︎
+  - markdown.extensions.tables
+  - pymdownx.arithmatex
+  - pymdownx.betterem
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - pymdownx.magiclink:
+      repo_url_shortener: true
+      repo_url_shorthand: true
+      provider: "github"
+      user: "facelessuser"
+      repo: "pymdown-extensions"
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.smartsymbols
+  - pymdownx.tasklist
+  - pymdownx.highlight:
+      linenums: true
+      linenums_style: pymdownx-inline
+
+nav:
+  - Строение GNU/Linux. Перезагрузка: index.md
+  - Предисловие: before_start.md
+  - Краткий обзор дистрибутивов GNU/Linux: distros.md
+  - Краткий обзор окружений пользователя: shells.md
+  - Строение типичного дистрибутива GNU/Linux. Процесс загрузки: linux_str.md
+
