@@ -70,5 +70,6 @@ nav:
   - Предисловие: before_start.md
   - Краткий обзор дистрибутивов GNU/Linux: distros.md
   - Краткий обзор окружений пользователя: shells.md
-  - Строение типичного дистрибутива GNU/Linux. Процесс загрузки: linux_str.md
+  - Строение GNU/Linux 1. Начальные сведения: linux_str.md
+  - Строение GNU/Linux 2. Процесс загрузки: boot.md
 
