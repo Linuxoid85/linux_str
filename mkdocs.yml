@@ -65,11 +65,16 @@ markdown_extensions:
       linenums: true
       linenums_style: pymdownx-inline
 
+#plugins:
+#  #- with-pdf
+
 nav:
   - Строение GNU/Linux. Перезагрузка: index.md
   - Предисловие: before_start.md
-  - Краткий обзор дистрибутивов GNU/Linux: distros.md
-  - Краткий обзор окружений пользователя: shells.md
-  - Строение GNU/Linux 1. Начальные сведения: linux_str.md
-  - Строение GNU/Linux 2. Процесс загрузки: boot.md
-  - Работа с RAM: ram.md
+  - Глава 1. Введение:
+    - Введение: chapter1/index.md
+    - Краткий обзор дистрибутивов GNU/Linux: chapter1/distros.md
+    - Краткий обзор окружений пользователя: chapter1/shells.md
+    - Строение GNU/Linux 1. Начальные сведения: chapter1/linux_str.md
+    - Строение GNU/Linux 2. Процесс загрузки: chapter1/boot.md
+    - Работа с RAM: chapter1/ram.md
