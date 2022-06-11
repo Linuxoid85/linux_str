@@ -78,3 +78,4 @@ nav:
     - Строение GNU/Linux 1. Начальные сведения: chapter1/linux_str.md
     - Строение GNU/Linux 2. Процесс загрузки: chapter1/boot.md
     - Работа с RAM: chapter1/ram.md
+    - О zRam: chapter1/zram.md
