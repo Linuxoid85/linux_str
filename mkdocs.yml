@@ -70,7 +70,7 @@ markdown_extensions:
 
 nav:
   - Строение GNU/Linux. Перезагрузка: index.md
-  - Предисловие: before_start.md
+  - Предисловие: chapter1/before_start.md
   - Глава 1. Введение:
     - Введение: chapter1/index.md
     - Краткий обзор дистрибутивов GNU/Linux: chapter1/distros.md
@@ -79,3 +79,6 @@ nav:
     - Строение GNU/Linux 2. Процесс загрузки: chapter1/boot.md
     - Работа с RAM: chapter1/ram.md
     - О zRam: chapter1/zram.md
+  - Глава 2. Администрирование системы:
+    - Введение: chapter2/index.md
+    - Типы файлов: chapter2/filetypes.md
