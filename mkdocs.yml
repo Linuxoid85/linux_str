@@ -65,8 +65,8 @@ markdown_extensions:
       linenums: true
       linenums_style: pymdownx-inline
 
-#plugins:
-#  #- with-pdf
+# plugins:
+  # - with-pdf
 
 nav:
   - Строение GNU/Linux. Перезагрузка: index.md
@@ -82,3 +82,6 @@ nav:
   - Глава 2. Администрирование системы:
     - Введение: chapter2/index.md
     - Типы файлов: chapter2/filetypes.md
+    - Права доступа к файлам: chapter2/permissions.md
+    - Управление программным обеспечением: chapter2/package_man.md
+
