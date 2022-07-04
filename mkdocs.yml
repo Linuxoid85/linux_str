@@ -65,8 +65,8 @@ markdown_extensions:
       linenums: true
       linenums_style: pymdownx-inline
 
-# plugins:
-  # - with-pdf
+#plugins:
+  #- with-pdf
 
 nav:
   - Строение GNU/Linux. Перезагрузка: index.md
